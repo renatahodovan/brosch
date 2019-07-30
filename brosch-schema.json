@@ -1,0 +1,115 @@
+{
+    "$comment": "Copyright (c) 2019 Renata Hodovan, Akos Kiss. Licensed under the BSD 3-Clause License <LICENSE.rst or https://opensource.org/licenses/BSD-3-Clause>. This file may not be copied, modified, or distributed except according to those terms.",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+
+    "description": "Security commit history schema (version 19.7).",
+    "type": "object",
+    "properties": {
+        "metadata": {
+            "description": "Metadata of the security commit history.",
+            "type": "object",
+            "properties": {
+                "project": {
+                    "description": "Name of the project that the security commit history was mined from.",
+                    "type": "string"
+                },
+                "repository": {
+                    "description": "URL of the project repository.",
+                    "type": "string",
+                    "format": "uri"
+                },
+                "issue-tracker": {
+                    "description": "URL of the project issue tracker.",
+                    "type": "string",
+                    "format": "uri"
+                },
+                "generator": {
+                    "description": "Name and version of the tool that mined the security commit history.",
+                    "type": "string"
+                },
+                "committed-before": {
+                    "description": "Upper bound for the commited-date of the commits in the security history.",
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "committed-after": {
+                    "description": "Lower bound for the commited-date of the commits in the security history.",
+                    "type": "string",
+                    "format": "date-time"
+                }
+            },
+            "required": [ "project", "repository", "issue-tracker", "generator" ]
+        },
+        "commits": {
+            "description": "Mined security-related commits.",
+            "type": "array",
+            "items": {
+                "description": "Details of a security-related commit.",
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "description": "Commit identifier.",
+                        "type": "string"
+                    },
+                    "author": {
+                        "description": "Author of the commit.",
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "description": "Name of the author of the commit.",
+                                "type": "string"
+                            },
+                            "email": {
+                                "description": "Email address of the author of the commit.",
+                                "type": "string",
+                                "format": "email"
+                            }
+                        }
+                    },
+                    "authored-date": {
+                        "description": "The date and time the commit was authored.",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "committer": {
+                        "description": "Committer of the commit.",
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "description": "Name of the committer of the commit.",
+                                "type": "string"
+                            },
+                            "email": {
+                                "description": "Email address of the committer of the commit.",
+                                "type": "string",
+                                "format": "email"
+                            }
+                        }
+                    },
+                    "committed-date": {
+                        "description": "The date and time the commit was committed to the repository.",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "message": {
+                        "description": "The message attached to the commit.",
+                        "type": "string"
+                    },
+                    "security-issue-ids": {
+                        "description": "Security-related issue IDs connected to this commit.",
+                        "type": "object",
+                        "patternProperties": {
+                            ".*": {
+                                "description": "Issue ID visibility.",
+                                "type": "string",
+                                "enum": [ "public", "private" ]
+                            }
+                        }
+                    }
+                },
+                "required": [ "id", "authored-date", "committed-date", "security-issue-ids" ]
+            }
+        }
+    },
+    "required": [ "metadata", "commits" ]
+}
